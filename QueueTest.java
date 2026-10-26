@@ -9,7 +9,6 @@ import java.util.ArrayList;
  * @author Mr. Bredemeier
  * @version November 4, 2012
  */
-
 public class QueueTest<T>
 {
     private static boolean failed = false;
