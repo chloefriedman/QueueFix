@@ -36,11 +36,11 @@ public class ArrayQueue<T> implements QueueInterface<T>
         if(isFull())
             {
                 doubleLength();
-                size++;
                 queue[size] = item;
+                size++;
                 tailIndex++;
             }
-       else if (tailIndex == size - 1)
+       else if (tailIndex == queue.length - 1)
        {
             tailIndex = 0;
             queue[tailIndex] = item;
@@ -49,7 +49,7 @@ public class ArrayQueue<T> implements QueueInterface<T>
        
        else
        {
-            tailIndex ++;
+            tailIndex++;
             queue[tailIndex] = item;
             size++;
        }

@@ -1,7 +1,7 @@
 public interface QueueInterface<T>
 {
     // returns the logical size of the queue
-    int size();    
+    int size();
     
     // tests if this queue is empty
     boolean empty();
