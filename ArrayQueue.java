@@ -36,7 +36,7 @@ public class ArrayQueue<T> implements QueueInterface<T>
         if(isFull())
             {
                 doubleLength();
-                queue[size] = item;
+                queue[tailIndex] = item;
                 size++;
                 tailIndex++;
             }
@@ -45,12 +45,13 @@ public class ArrayQueue<T> implements QueueInterface<T>
             tailIndex = 0;
             queue[tailIndex] = item;
             size++;
+            tailIndex++;
         }
        
        else
        {
-            tailIndex++;
             queue[tailIndex] = item;
+            tailIndex++;
             size++;
        }
        return item;
@@ -60,7 +61,7 @@ public class ArrayQueue<T> implements QueueInterface<T>
     // without removing it from the queue
     public T peek() throws QueueUnderflowException
     {
-       if(empty())
+       if(queue[headIndex] == null || empty())
        {
             throw new QueueUnderflowException("No elements in the queue");
        }
@@ -83,7 +84,7 @@ public class ArrayQueue<T> implements QueueInterface<T>
         
             T current = queue[headIndex];
             queue[headIndex] = null;
-            headIndex++;
+                headIndex++;
             size--;
             if(size <= queue.length/4)
             {
@@ -96,7 +97,13 @@ public class ArrayQueue<T> implements QueueInterface<T>
     // removes all of the elements from this stack
     public void clear()
     {
-        
+        for (int i = 0; i < queue.length; i++)
+        {
+            queue[i] = null;
+        }
+        size = 0;
+        headIndex = 0;
+        tailIndex = 0;
     }
 
       public void doubleLength()
@@ -105,7 +112,7 @@ public class ArrayQueue<T> implements QueueInterface<T>
         T[] newQueue = (T[])new Object[2*length];
         if(tailIndex > headIndex)
         {
-            for(int i = 0; i < queue.length; i++)
+            for(int i = headIndex; i < queue.length; i++)
             {
                 newQueue[i] = queue[i];
             }
@@ -118,7 +125,7 @@ public class ArrayQueue<T> implements QueueInterface<T>
             } 
             for(int i = 0; i < headIndex; i++)
             {
-                newQueue[i + headIndex] = queue[i];
+                newQueue[i + queue.length - headIndex] = queue[i];
             }
             headIndex = 0;
             tailIndex = size -1;
