@@ -28,6 +28,7 @@ public class LinkedQueue<T> implements QueueInterface<T>
         if(size == 0)
         {
             stack = new LLNode<T>(item);
+            size++;
             return stack.getInfo();
         }
         else
@@ -49,7 +50,7 @@ public class LinkedQueue<T> implements QueueInterface<T>
     // without removing it from the queue
     public T peek() throws QueueUnderflowException
     {
-        if(stack == null || size == 0)
+        if(stack == null || empty())
         {
             throw new QueueUnderflowException("No items in Queue");
         }
@@ -63,15 +64,16 @@ public class LinkedQueue<T> implements QueueInterface<T>
     // and returns that object as the value of this function
     public T remove() throws QueueUnderflowException
     {
-        if(stack == null || size == 0)
+        if(stack == null || empty())
         {
             throw new QueueUnderflowException("No items in Queue");
         }
         else
         {
             T removing = stack.getInfo();
-            LLNode<T> tempRef = stack.getLink();
-            stack = tempRef;
+            LLNode<T> tempRef = stack;
+            stack = stack.getLink();
+            tempRef.setLink(null);
             size--;
             return removing;
         }

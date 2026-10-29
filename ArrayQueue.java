@@ -1,148 +1,130 @@
-@SuppressWarnings("unchecked")
-public class ArrayQueue<T> implements QueueInterface<T>
-{
+public class ArrayQueue<T> implements QueueInterface<T>{
+    // returns the logical size of the queue
     private T[] queue;
     private int size;
-    private int headIndex;
-    private int tailIndex;
+    private int headInd;
+    private int tailInd;
 
-    public ArrayQueue()
-    {
-        this.queue = (T[])new Object[4];
+    public ArrayQueue(){
+        this.queue = (T[]) new Object[4];
         size = 0;
-        headIndex = 0;
-        tailIndex = 0;       
+        headInd = 0;
+        tailInd = 0;
     }
-    // returns the logical size of the queue
-    public int size()
-    {
+
+    public int size(){
         return size;
-    } 
+    }   
     
     // tests if this queue is empty
-    public boolean empty()
-    {
-        return (size == 0);
+    public boolean empty(){
+        return(size == 0);
     }
 
-    private boolean isFull()
-    {
-        return(size == queue.length);
+    public boolean isFull(){
+        return (size == queue.length);
     }
     
     // adds an item onto the rear of this queue
-    public T add(T item)
-    {
-        if(isFull())
-            {
-                doubleLength();
-                queue[tailIndex] = item;
-                size++;
-                tailIndex++;
-            }
-       else if (tailIndex == queue.length - 1)
-       {
-            tailIndex = 0;
-            queue[tailIndex] = item;
-            size++;
-            tailIndex++;
+    public T add(T item){
+        if(empty()){
+            headInd = 0;
+            tailInd = 0;
         }
-       
-       else
-       {
-            queue[tailIndex] = item;
-            tailIndex++;
-            size++;
-       }
-       return item;
+        else{
+            if(isFull()){
+                doubleLength();
+            }
+            if(tailInd == queue.length - 1){
+                tailInd = 0;
+            }
+            else{
+                tailInd++;
+            }
+        }
+        queue[tailInd] = item;
+        size++;
+        return item;
     }
         
     // looks at the object at the front of this queue
     // without removing it from the queue
-    public T peek() throws QueueUnderflowException
-    {
-       if(queue[headIndex] == null || empty())
-       {
+    public T peek() throws QueueUnderflowException{
+        if(empty()){
             throw new QueueUnderflowException("No elements in the queue");
-       }
-       else
-       {
-            return queue[headIndex];
-       }
+        }
+        else
+        return queue[headInd];
+
     }
     
     // removes the object at the front of this queue 
     // and returns that object as the value of this function
-    public T remove() throws QueueUnderflowException
-    {
-        if(empty())
-       {
+    public T remove() throws QueueUnderflowException{
+         if(empty()){
             throw new QueueUnderflowException("No elements in the queue");
-       }
-       else
-       {
-        
-            T current = queue[headIndex];
-            queue[headIndex] = null;
-                headIndex++;
+        }
+        else{
+            T current = queue[headInd];
+            queue[headInd] = null;
             size--;
-            if(size <= queue.length/4)
-            {
-                halfLength();
+            if(size == 0){
+                headInd = 0;
+                tailInd = 0;
+            }
+            else{
+                if(headInd == queue.length - 1){
+                    headInd = 0;
+                }
+                else{
+                    headInd++;
+                }
+                if(queue.length > 4 && size <= queue.length / 4){
+                    halfLength();
+                }
             }
             return current;
-       }
+        }
     }
     
     // removes all of the elements from this stack
-    public void clear()
-    {
-        for (int i = 0; i < queue.length; i++)
-        {
-            queue[i] = null;
-        }
+    public void clear(){
+        queue = (T[]) new Object[4];
         size = 0;
-        headIndex = 0;
-        tailIndex = 0;
+        headInd = 0;
+        tailInd = 0;
     }
-
-      public void doubleLength()
-    {
+    
+    public void doubleLength(){
         int length = queue.length;
-        T[] newQueue = (T[])new Object[2*length];
-        if(tailIndex > headIndex)
-        {
-            for(int i = headIndex; i < queue.length; i++)
-            {
-                newQueue[i] = queue[i];
+        T[] newQueue = (T[]) new Object[length * 2];
+        int current = headInd;
+        for(int i = 0; i < size; i++){
+            newQueue[i] = queue[current];
+            current++;
+            if(current == length){
+                current = 0;
             }
         }
-        else
-        {
-           for(int i = headIndex; i < queue.length; i++)
-            {
-                newQueue[i - headIndex] = queue[i];
-            } 
-            for(int i = 0; i < headIndex; i++)
-            {
-                newQueue[i + queue.length - headIndex] = queue[i];
-            }
-            headIndex = 0;
-            tailIndex = size -1;
-        }
-       
-
         queue = newQueue;
+        headInd = 0;
+        tailInd = size - 1;
+        
     }
-    public void halfLength()
-    {
-        int length = this.queue.length;
-        T[] newQueue = (T[])new Object[length/2];
-        for(int i = 0; i < newQueue.length; i++)
-        {
-            newQueue[i] = queue[i];
-        }
 
+    public void halfLength(){
+        int length = queue.length;
+        T[] newQueue = (T[]) new Object[length / 2];
+        int current = headInd;
+        for(int i = 0; i < size; i++){
+            newQueue[i] = queue[current];
+            current++;
+            if(current == length){
+                current = 0;
+            }
+        }
         queue = newQueue;
+        headInd = 0;
+        tailInd = size - 1;
     }
 }
